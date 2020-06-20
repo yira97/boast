@@ -1,3 +1,3 @@
-module github.com/yrfg/errs
+module github.com/yrfg/boast
 
 go 1.14
