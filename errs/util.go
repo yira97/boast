@@ -1,5 +1,10 @@
 package errs
 
+import (
+	"encoding/json"
+	"net/http"
+)
+
 // ErrorDisplay is struct for show detail of an err in package
 type ErrorDisplay struct {
 	Code StatCode `json:"code"`
@@ -56,4 +61,14 @@ func Dis(code StatCode, details ...string) ErrorDisplay {
 		resp.Detail[details[i]] = details[i+1]
 	}
 	return resp
+}
+
+// WriteDis is a helper function to write error to http respond directly
+func WriteDis(w http.ResponseWriter, httpCode int, serverCode StatCode, details ...string) {
+	dis := Dis(serverCode, details...)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(httpCode)
+	if j, err := json.Marshal(dis); err == nil {
+		w.Write(j)
+	}
 }
